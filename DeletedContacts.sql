@@ -4,7 +4,7 @@ Select distinct *
 From
 
 (
-      Select "ContactID"
+      Select "ContactID" //This is Contact ID
     ,"Email Address"
     ,"First Name"
     ,"Last Name"
