@@ -5,7 +5,7 @@ From
 
 (
       Select "ContactID" //This is Contact ID
-    ,"Email Address"
+    ,"Email Address" // This is an Email Address
     ,"First Name"
     ,"Last Name"
     ,"Country"
