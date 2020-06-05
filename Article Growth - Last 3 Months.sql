@@ -1,4 +1,6 @@
 //Developer: Callum Young
+//Database: DEV_EDW
+//Schema: CUST360
 //Name: Article Growth - Last 3 Months
 //Created: 04/06/2020
 
