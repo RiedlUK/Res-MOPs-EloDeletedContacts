@@ -1,6 +1,7 @@
  ///Developer:Chris Riedl\
 ///Name:Eloqua Table Test\
 ///Created:2020-05-26\
+//Last recorded Runtime: 26.68 secs
 
 Select Min("EC"."ACTIVITYDATE") as "MinDate"
 ,Max("EC"."ACTIVITYDATE") as "MaxDate"
@@ -95,6 +96,5 @@ Select Min("Camp"."CAMPAIGN_START_DATE") as "MinDate"
 ,'"DEV_EDW"."CUST360"."T_S_CAMPAIGN_APR"' as "Table"
 
 from "DEV_EDW"."CUST360"."T_S_CAMPAIGN_APR" as "Camp"
-
 
 ;

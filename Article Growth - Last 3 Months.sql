@@ -3,6 +3,7 @@
 //Schema: CUST360
 //Name: Article Growth - Last 3 Months
 //Created: 04/06/2020
+//Last Recorded Run Time
 
 select 
         esend.campaign_name as "Campaign Name"
@@ -48,7 +49,8 @@ from ( //Creates the main cohort from the t_S_emailsendtable
         from dev_edw.cust360.t_s_emailsend esend
         join dev_edw.cust360.t_s_campaign_apr ca on esend.campaignid = ca.eloqua_campaign_id and ca.sub_campaign_type = 'SUB'  
                                                                                              and cast(esend.activitydate as datetime)  > '2020-03-01 00:00:00.000'
-                                                                                             and ca.business_unit = 'R-DG'
+                                                                                             and ca.business_unit != 'R-DG'
+                                                                                             and ca.division = 'RC'
         join dev_edw.cust360.t_s_contact c on esend.contactid = c.contact_id 
         
         )esend 
