@@ -1,6 +1,7 @@
  ///Developer:Chris Riedl\
 ///Name:Eloqua Table Test\
 ///Created:2020-05-26\
+///TEST DATA FOR TRAINING
 //Last recorded Runtime: 26.68 secs
 
 Select Min("EC"."ACTIVITYDATE") as "MinDate"
