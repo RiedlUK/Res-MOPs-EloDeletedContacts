@@ -1,6 +1,7 @@
 //Developer: Callum Young
 //Database: DEV_EDW
 //Schema: CUST360
+/// TEST
 //Name: Article Growth - Last 3 Months
 //Created: 04/06/2020
 //Last Recorded Run Time: 93.6 Secs
