@@ -23,7 +23,7 @@ select
         ,tsend.emailssent as "Total Sends"
         ,cast(tsend.emailsSent as Int) - case when bback.emailsbounced is null then 0 else cast(bback.emailsbounced as Int) end as "Total Delivered"
         ,topen.emailsopened as "Total Opens"
-        ,tclick.emailsclicked as "total Clickthroughs"
+        ,tclick.emailsclicked as "Total Clickthroughs"
         ,esend.emailaddress as "Email Address"
         ,tunsub.unsubscribed as "Total Unsubscribes by Email"
         ,bback.hardbounce as "Total Hard Bouncbacks"
