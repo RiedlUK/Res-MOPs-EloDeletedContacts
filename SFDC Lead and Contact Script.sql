@@ -54,7 +54,9 @@ and (u.USERROLEID is Null or u.USERROLEID not in ('00Ed0000000ieKCEAY' --RES Lib
 --Executive Management	00Ed0000000hY27	00Ed0000000hY27EAE
 
 
-select *
+select count (ID)
 
 from T_S_SFDC_CAMPAINGN_MEM
+
+
 //where ID = '005d0000002eSQVAA2'

@@ -1,9 +1,8 @@
---DROP TABLE TB_AUTHOR_SEGMENTS
 
-CREATE TABLE TB_AUTHOR_SEGMENTS AS
 
 SELECT
 adr.AUTHOR_STANDARDIZED_NAME AS AUTHOR,
+AUTHOR.EMAIL_ADDRESS,
 adr.PRID_ID,
 adr.INSTITUTE,
 COUNT(DISTINCT arts.UID) AS TOTAL_JOURNAL_ARTICLES,
@@ -38,10 +37,10 @@ ELSE 'One-time' end publisher_Loyalty_score
 
 ----------------------------------------------------------------------------------------------------------------
     
-FROM EBAC_XML..DW_ARTICLE_EXTN arts
-INNER JOIN datasalon..STG_LKP_PRODUCT product ON arts.JOURNAL_ID = product.EBAC_JOURNAL_ID
-LEFT OUTER JOIN EBAC_XML..DW_AUTHOR_ADDRESS_EXTN adr ON adr.ARTICLE_ID = arts.ARTICLE_ID
-LEFT OUTER JOIN EBAC_XML..DW_AUTHOR author ON arts.ARTICLE_ID = author.ARTICLE_ID
+FROM prod_edw.ebac.DW_ARTICLE_EXTN arts
+INNER JOIN prod_edw.ds.STG_LKP_PRODUCT product ON arts.JOURNAL_ID = product.EBAC_JOURNAL_ID
+LEFT OUTER JOIN prod_edw.ebac.DW_AUTHOR_ADDRESS_EXTN adr ON adr.ARTICLE_ID = arts.ARTICLE_ID
+LEFT OUTER JOIN prod_edw.ebac.DW_AUTHOR author ON arts.ARTICLE_ID = author.ARTICLE_ID
 
 
 --Inline query creates the author frequency based on average papers in last 4 years. Joined on name/institute/PRID
@@ -53,8 +52,8 @@ LEFT OUTER JOIN (
     adr.INSTITUTE,
     COUNT(distinct arts.UID)/4 AS AVERAGE_ARTICLES       
     FROM 
-    EBAC_XML..DW_ARTICLE_EXTN arts
-    INNER JOIN EBAC_XML..DW_AUTHOR_ADDRESS_EXTN Adr ON arts.ARTICLE_ID = adr.ARTICLE_ID    
+    prod_edw.ebac.DW_ARTICLE_EXTN arts
+    INNER JOIN prod_edw.ebac.DW_AUTHOR_ADDRESS_EXTN Adr ON arts.ARTICLE_ID = adr.ARTICLE_ID    
     WHERE 
     arts.YEAR_PUBLISHED >= YEAR(CURRENT_DATE) - 4
     AND arts.YEAR_PUBLISHED < YEAR(CURRENT_DATE)
@@ -83,9 +82,9 @@ LEFT OUTER JOIN (
     COUNT(DISTINCT(CASE WHEN arts.YEAR_PUBLISHED = YEAR(CURRENT_DATE)-3 THEN arts.UID END)) AS ThreeYear_Papers,
     COUNT(DISTINCT(CASE WHEN arts.YEAR_PUBLISHED = YEAR(CURRENT_DATE)-4 THEN arts.UID END)) AS FourYear_Papers
     FROM
-    EBAC_XML..DW_ARTICLE_EXTN arts
-    INNER JOIN DATASALON..STG_LKP_PRODUCT product ON arts.JOURNAL_ID = product.EBAC_JOURNAL_ID
-    INNER JOIN EBAC_XML..DW_AUTHOR_ADDRESS_EXTN Adr ON arts.ARTICLE_ID = adr.ARTICLE_ID
+    prod_edw.ebac.DW_ARTICLE_EXTN arts
+    INNER JOIN prod_edw.ds.STG_LKP_PRODUCT product ON arts.JOURNAL_ID = product.EBAC_JOURNAL_ID
+    INNER JOIN prod_edw.ebac.DW_AUTHOR_ADDRESS_EXTN Adr ON arts.ARTICLE_ID = adr.ARTICLE_ID
     WHERE arts.CITABLE_ITEM = 1
     AND arts.YEAR_PUBLISHED >= YEAR(CURRENT_DATE) - 4
     AND adr.AUTHOR_STANDARDIZED_NAME IS NOT NULL
@@ -105,11 +104,11 @@ LEFT OUTER JOIN (
         Select
         arts.ARTICLE_ID,
         NTILE(4) OVER (PARTITION BY subs.SUBJECT_CAT_DESC, arts.YEAR_PUBLISHED, arts.PRIMARY_TYPE ORDER BY COUNT(DISTINCT cites.CITED_UID || cites.CITING_UID) ASC) AS Citation_Quartile    
-        FROM EBAC_XML..DW_ARTICLE_EXTN Arts
-        INNER JOIN EBAC_XML..DW_SUBJECT_CATEGORY subs ON subs.ARTICLE_ID = arts.ARTICLE_ID
-        INNER JOIN DATASALON..STG_LKP_PRODUCT product ON arts.JOURNAL_ID = product.EBAC_JOURNAL_ID
-        INNER JOIN EBAC_XML..DW_CITED_REFERENCE_EXTN cites ON arts.ARTICLE_ID = cites.CITED_ARTICLE_ID
-        INNER JOIN EBAC_XML..DW_AUTHOR_ADDRESS_EXTN Adr ON arts.ARTICLE_ID = adr.ARTICLE_ID
+        FROM prod_edw.ebac.DW_ARTICLE_EXTN Arts
+        INNER JOIN prod_edw.ebac.DW_SUBJECT_CATEGORY subs ON subs.ARTICLE_ID = arts.ARTICLE_ID
+        INNER JOIN prod_edw.ds.STG_LKP_PRODUCT product ON arts.JOURNAL_ID = product.EBAC_JOURNAL_ID
+        INNER JOIN prod_edw.ebac.DW_CITED_REFERENCE_EXTN cites ON arts.ARTICLE_ID = cites.CITED_ARTICLE_ID
+        INNER JOIN prod_edw.ebac.DW_AUTHOR_ADDRESS_EXTN Adr ON arts.ARTICLE_ID = adr.ARTICLE_ID
         WHERE
         arts.CITABLE_ITEM = 1
         AND arts.YEAR_PUBLISHED >= YEAR(CURRENT_DATE) - 4
@@ -135,9 +134,9 @@ LEFT OUTER JOIN(
         COUNT(DISTINCT arts.UID) AS WILEY_ARTS
         
         FROM
-        EBAC_XML..DW_ARTICLE_EXTN arts
+        prod_edw.ebac.DW_ARTICLE_EXTN arts
         
-        INNER JOIN EBAC_XML..DW_AUTHOR_ADDRESS_EXTN Adr ON arts.ARTICLE_ID = adr.ARTICLE_ID
+        INNER JOIN prod_edw.ebac.DW_AUTHOR_ADDRESS_EXTN Adr ON arts.ARTICLE_ID = adr.ARTICLE_ID
         
         WHERE arts.CITABLE_ITEM = 1
         AND arts.PUBLISHER_GROUP = 'WILEY'
@@ -167,8 +166,8 @@ LEFT OUTER JOIN(
     COUNT(DISTINCT(CASE WHEN arts.YEAR_PUBLISHED = YEAR(CURRENT_DATE)-3 THEN arts.UID END)) AS ThreeYear_Papers,
     COUNT(DISTINCT(CASE WHEN arts.YEAR_PUBLISHED = YEAR(CURRENT_DATE)-4 THEN arts.UID END)) AS FourYear_Papers
     FROM
-    EBAC_XML..DW_ARTICLE_EXTN arts
-    INNER JOIN EBAC_XML..DW_AUTHOR_ADDRESS_EXTN Adr ON arts.ARTICLE_ID = adr.ARTICLE_ID
+    prod_edw.ebac.DW_ARTICLE_EXTN arts
+    INNER JOIN prod_edw.ebac.DW_AUTHOR_ADDRESS_EXTN Adr ON arts.ARTICLE_ID = adr.ARTICLE_ID
     WHERE arts.CITABLE_ITEM = 1
     AND arts.YEAR_PUBLISHED >= YEAR(CURRENT_DATE) - 4
     AND adr.AUTHOR_STANDARDIZED_NAME IS NOT NULL
@@ -199,3 +198,8 @@ All_Journals_Frequency_score,
 Journal_Loyalty_score,
 publisher_Loyalty_score,
 wileyarts.WILEY_ARTS;
+
+select *
+
+FROM prod_edw.ebac.DW_ARTICLE_EXTN arts
+
