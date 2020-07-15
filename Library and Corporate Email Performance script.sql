@@ -1,15 +1,13 @@
 //Developer: Callum Young
 //Database: DEV_EDW
 //Schema: CUST360
-/// TEST
 //Name: Library and Corportate Email Performance
-//Created: 04/06/2020
+//Created: 13/07/2020
 //Last Recorded Run Time: 93.6 Secs
 
 select 
         esend.campaign_name as "Campaign Name"
-        ,esend.job_number as "Job Number"
-        ,bback.emailsbounced as "bouncebacks"
+        ,esend.job_number as "Job Number"        
         ,esend.country as "Contact Country"
         ,esend.contactid as "Eloqua Contact ID"
         ,'' as "Segment ID"
@@ -27,8 +25,10 @@ select
         ,tclick.emailsclicked as "total Clickthroughs"
         ,esend.emailaddress as "Email Address"
         ,tunsub.unsubscribed as "Total Unsubscribes by Email"
+        ,bback.emailsbounced as "bouncebacks"
         ,bback.hardbounce as "Total Hard Bouncbacks"
         ,bback.softbounce as "Total Soft Bouncbacks"
+        ,esend.business_unit
 
 from ( //Creates the main cohort from the t_S_emailsendtable
         select --*
@@ -45,12 +45,14 @@ from ( //Creates the main cohort from the t_S_emailsendtable
                 ,ca.job_number
                 ,c.country
                 ,c.ORCID_ID1
+                ,ca.business_unit
                 
                 
         from dev_edw.cust360.t_s_emailsend esend
         join dev_edw.cust360.t_s_campaign ca on esend.campaignid = ca.eloqua_campaign_id and cast(esend.activitydate as datetime)  > '2020-05-01 00:00:00.000'                                                                                             
                                                                                          and ca.division = 'RC'
-                                                                                         and ca.business_unit in ( 'R-CM', 'LIBM-APAC', 'LIBM-EMEA', 'LIBM-US', 'R-PRODB2B', 'R-COM', 'LIBM-APAC'
+                                                                                         and ca.business_unit in ( //Library and Corporate business units
+                                                                                                                   'R-CM', 'LIBM-APAC', 'LIBM-EMEA', 'LIBM-US', 'R-PRODB2B', 'R-COM', 'LIBM-APAC',
                                                                                                                    'LIBM-US', 'LIBM-EMEA', 'R-PRODB2B', 'R-CM', 'R-SS', 'Digital Product Management',
                                                                                                                    'RESM-SS', 'RESM-CM', 'R-SS' )                                                                                                                                           
         join dev_edw.cust360.t_s_contact c on esend.contactid = c.contact_id 
