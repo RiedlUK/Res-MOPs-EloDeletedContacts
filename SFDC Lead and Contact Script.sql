@@ -43,22 +43,9 @@ and (u.USERROLEID is Null or u.USERROLEID not in ('00Ed0000000ieKCEAY' --RES Lib
 ;
 
 
----filter on USERROLEID in User table for "Marketing & Executive. Jimmy to send the IDs. 
---Role	15digitid	18digitid
---RES Library Americas Marketing	00Ed0000000ieKC	00Ed0000000ieKCEAY
---RES Marketing	00Ed0000000ibBl	00Ed0000000ibBlEAI
---RES Corporate Marketing	00E0W000001qIVf	00E0W000001qIVfUAM
---APAC Marketing	00E0W000001qIVa	00E0W000001qIVaUAM
---RES Marketing Manager	00Ed0000000ibBm	00Ed0000000ibBmEAI
---Society Marketing	00Ed0000001hh9O	00Ed0000001hh9OEAQ
---APAC China Marketing	00E0W0000023QaY	00E0W0000023QaYUAU
---APAC Marketing	00Ed0000000eHPQ	00Ed0000000eHPQEA2
---Executive Management	00Ed0000000hY27	00Ed0000000hY27EAE
---RES Library EMEA Marketing  00E0W000001qIVV  00E0W000001qIVVUA2
 
-select count (ID)
 
 from T_S_SFDC_CAMPAINGN_MEM
 
+where campaignid = '7010W000002CqFJQA0'
 
-//where ID = '005d0000002eSQVAA2'
