@@ -21,3 +21,8 @@ and c.business_unit not in ( 'OTHM-CV', 'OTHM-EDIT', 'OTHM-COMPUBB2B', 'OTHM-MV'
                                                'Knowledge & Learning - Digital Delivery and Product Management', 'KL-LIBRARY', 'OTHM-MV', 'CORP-WILEYCOM', 'Corporate - Other',
                                                'OTHM-BFPR', 'KL-OTHER', 'Knowledge & Learning - Professional Learning', 'KL-CORP', 'CORP-OTHER', 'CORP-CONF', 'OTHM-COMEM',
                                                'OTHM-EDITOTH' ) 
+                                      
+      ;
+
+Select max(activitydate)
+from t_s_EMAILSEND
