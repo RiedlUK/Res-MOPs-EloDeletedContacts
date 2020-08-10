@@ -19,7 +19,7 @@ cm.id as campaign_member_id
 
 from T_S_SFDC_CAMPAINGN_MEM cm
 left join t_s_sfdc_campaign c on c.id = cm.campaignid
-left join t_s_sfdc_user u on cm.leadorcontactownerid = u.id
+left join t_s_sfdc_user u on cm.OWNERID__C = u.id
 
 where  c.ULTIMATE_PARENT_ID__C in ('7010W000002efsq','7010W0000023vOE','7010W0000027yf2')
 and cm.CAMPAIGN_BUSINESS_UNIT__C != 'Research - SM - Society Marketing Strategy'
@@ -36,12 +36,14 @@ and (u.USERROLEID is Null or u.USERROLEID not in ('00Ed0000000ieKCEAY' --RES Lib
                                                 ,'00E0W0000023QaYUAU'--APAC China Marketing
                                                 ,'00Ed0000000eHPQEA2'--APAC Marketing
                                                 ,'00Ed0000000hY27EAE'--Executive Management
+                                                ,'00E0W000001qIVVUA2' --RES Library EMEA Marketing
                                                 ))
+
 
 ;
 
 
-select count(id)
+
 
 from T_S_SFDC_CAMPAINGN_MEM
 
