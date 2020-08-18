@@ -1,5 +1,5 @@
 Select distinct 
-case when gpe.Email_address not like '%/%'
+case when gpe.Email_address not like '%/%' or gpe.Email_address not like '%__%'
         then gpe.Email_address 
      when gpe.Email_address like '%WOS%'
         then ''
