@@ -4,6 +4,7 @@ o.id as Opportunity_id
 ,o.stagename as opp_stage
 ,o.amount as opp_ammount
 ,o.type as opp_type
+,o.CREATEDDATE as created_date
 ,o.isclosed
 ,o.iswon
 ,o.lost_reason__C as opp_lost_reason
@@ -19,13 +20,7 @@ o.id as Opportunity_id
 ,o.PRIMARY_PRODUCT_QUANTITY__C as primary_product_quantity
 ,o.SALES_REP_NAME__C as sales_rep_name
 ,case when ci.opportunity__C is null then 'N' else 'Y' end as Marketing_Impact_flag //marketing has had influence from the top of the funnel through a campaign.
-,ci.campaign__c as MI_campaignid
-,ci.CAMPAIGNS_ULTIMATE_PARENT__C as MI_ultimate_parent_id
-,ci.CAMPAIGN_BUSINESS_UNIT__C as MI_campaign_business_unit
-,ci.CAMPAIGN_TYPE__C as MI_campaign_type
 ,case when ci.opportunity__c is null and ac.opportunity_id is not null then 'Y' else 'N' end as Marketing_Influence_flag //marketing has had influence at the bottom of the funnel and not through a campaign.
-,ac.activity_subject
-,ac.activity_type
 ,o.CLOSEDATE as opp_closed_date
 ,rt.name as opp_record_type
 ,o.SHORT_NAME__C as opp_short_name
@@ -40,32 +35,28 @@ join t_s_sfdc_rec_type rt on o.recordtypeid = rt.id // adds in the record name f
                           
 left join t_s_sfdc_contact c on o.contactid = c.id //adds in contact name data
 
+
 left join (// This left join adds in the data where a campaign has had marketing influence (Marketing Impact Flag field)
-          select distinct
-          ci.opportunity__C
-          ,ci.campaign__c
-          ,ci.CAMPAIGNS_ULTIMATE_PARENT__C
-          ,ci.CAMPAIGN_BUSINESS_UNIT__C
-          ,ci.CAMPAIGN_TYPE__C
-          ,c.name campaign_name
-          
-          
-          from t_s_sfdc_campaign_influence ci
-          left join t_s_sfdc_opportunity o on ci.opportunity__c = o.id
-          join t_s_sfdc_campaign c on ci.campaign__C = c.id                                                 
-                                   and ( left(ci.CAMPAIGNS_ULTIMATE_PARENT__C,15) in ('7010W000002efsq', '7010W0000023vOE')  and CAMPAIGN_BUSINESS_UNIT__C not like '%society%' 
-                                                                                                                             and o.fiscalyear = '2021') //CHANGE for new financial year
-                                   
-                                   or ( left(ci.CAMPAIGNS_ULTIMATE_PARENT__C,15) = '7010W0000027yf2' and CAMPAIGN_BUSINESS_UNIT__C not like '%society%' )
+                select  distinct
+                          ci.opportunity__C
+                
+                
+                from t_s_sfdc_campaign_influence  ci
+                join t_s_sfdc_opportunity o on ci.opportunity__c = o.id
+                
+                join t_s_sfdc_campaign c on ci.campaign__C = c.id 
+                                         and (
+                                                      ( left(ci.CAMPAIGNS_ULTIMATE_PARENT__C,15) = '7010W0000027yf2' and CAMPAIGN_BUSINESS_UNIT__C not like '%society%'   )
+                                                   or 
+                                                      ( left(ci.CAMPAIGNS_ULTIMATE_PARENT__C,15) in ('7010W000002efsq', '7010W0000023vOE')  and CAMPAIGN_BUSINESS_UNIT__C not like '%society%' and o.fiscalyear = '2021' )  
+                      
+                                              ) 
                                    
           ) ci on o.id = ci.opportunity__C
 
 left join (//This left join adds in the opportunity task (also called activities) information that relates to marketing activity
            
-           Select t.whatid opportunity_id
-                        ,t.subject activity_subject
-                        ,t.type activity_type
-                        
+           Select distinct t.whatid opportunity_id                   
                         
                         
                         from t_s_sfdc_task t
@@ -76,4 +67,3 @@ left join (//This left join adds in the opportunity task (also called activities
                                                   and lower(t.subject)not like '%ala%'                          
                           ) ac on o.id = ac.opportunity_id
 
-where o.fiscalyear = '2021' //CHANGE for new financial year
