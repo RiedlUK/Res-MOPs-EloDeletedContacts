@@ -48,16 +48,10 @@ from ( //Creates the main cohort from the t_S_emailsendtable
                 
                 
         from dev_edw.cust360.t_s_emailsend esend
-        join dev_edw.cust360.t_s_campaign_apr ca on esend.campaignid = ca.eloqua_campaign_id and ca.sub_campaign_type = 'SUB'  
+        join dev_edw.cust360.t_s_campaign ca on esend.campaignid = ca.eloqua_campaign_id and ca.sub_campaign_type = 'SUB'  
                                                                                              and cast(esend.activitydate as datetime)  > '2020-03-01 00:00:00.000'
                                                                                              and ca.division = 'RC'
-                                                                                             and ca.eloqua_campaign_id not in ('24013', //Exclude Global Program Campaigns (always on campaigns)
-                                                                                                                        '24260',
-                                                                                                                        '24853',
-                                                                                                                        '25198',
-                                                                                                                        '24878',
-                                                                                                                        '25055',
-                                                                                                                        '27387')
+                                                                                             and ca.eloqua_campaign_id = 27387
                                                                                                                         
                                                                                                                         
                                                                                             and ca.business_unit not in ( //Excludes non reasearch marketing

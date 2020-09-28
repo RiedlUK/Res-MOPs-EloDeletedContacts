@@ -13,6 +13,7 @@ select
         ,'' as "Journal Code"
         ,esend.assetid as "Email ID"
         ,esend.assetname as "Email Name"
+        ,esend."YearMonth"
         ,esend.activitydate as "Email Send Date"
         ,tsend.emailssent as "Total Sends"
         ,cast(tsend.emailsSent as Int) - case when bback.emailsbounced is null then 0 else cast(bback.emailsbounced as Int) end as "Total Delivered"
@@ -33,7 +34,8 @@ from ( //Creates the main cohort from the t_S_emailsendtable
                 ,esend.contactid
                 ,esend.assetname 
                 ,esend.emailaddress
-                ,cast(esend.activitydate AS date) as activitydate
+                ,cast(esend.activitydate AS datetime) as activitydate
+                ,cast(concat(left(esend.activitydate,4),SUBSTRING(esend.activitydate, 6, 2 )) as int) as "YearMonth"
                 ,'' as campaign_name
                 ,'' as job_number
                 ,c.country
@@ -127,7 +129,10 @@ left join ( //joining total unsubscribes through by UniqueSendID to main esend c
                    
              group by concat(u.campaignid, '.', u.assetid, '.', u.contactid)
               
-              )Tunsub on esend.uniquesendid = tunsub.uniquesendid    
+              )Tunsub on esend.uniquesendid = tunsub.uniquesendid 
               
-order by esend.activitydate DESC
-; 
+ Order by   esend.activitydate desc
+
+;
+
+
