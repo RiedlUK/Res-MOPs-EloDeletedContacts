@@ -1,7 +1,7 @@
 select distinct Eloqua_campaign_id
 
-from dev_edw.CUST360.t_s_campaign c 
-inner join dev_edw.CUST360.t_s_EMAILSEND es on es.campaignid = c.eloqua_campaign_id 
+from prod_edw.CUST360.t_s_campaign c 
+inner join prod_edw.CUST360.t_s_EMAILSEND es on es.campaignid = c.eloqua_campaign_id 
                and cast(es.activitydate as datetime)  > '2020-03-01 00:00:00.000'
                and c.eloqua_campaign_id not in ('24013', //Global Program Campaigns (always on campaigns)
                                              '24260',

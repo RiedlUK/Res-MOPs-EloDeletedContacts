@@ -49,7 +49,7 @@ Left Join (Select
             CONCAT("EC"."CAMPAIGNID", '.',"EC"."ASSETID",'.',"EC"."CONTACTID") as "UniqueSendID"
             ,count("EC"."ACTIVITYID") as "Clicks"
 
-            from "DEV_EDW"."CUST360"."T_S_EMAILCLICKTHROUGH" as "EC"
+            from "PROD_EDW"."CUST360"."T_S_EMAILCLICKTHROUGH" as "EC"
 
             group by CONCAT("EC"."CAMPAIGNID", '.',"EC"."ASSETID",'.',"EC"."CONTACTID")) as "EClick"
             
@@ -61,7 +61,7 @@ Left Join (Select
             CONCAT("CAMPAIGNID", '.',"ASSETID",'.',"CONTACTID") as "UniqueSendID"
             ,count("ACTIVITYID") as "BounceBack"
 
-            from "DEV_EDW"."CUST360"."T_S_BOUNCEBACK" 
+            from "PROD_EDW"."CUST360"."T_S_BOUNCEBACK" 
 
             group by CONCAT("CAMPAIGNID", '.',"ASSETID",'.',"CONTACTID")) as "BOU"
             
@@ -81,7 +81,7 @@ Left Join ( Select
             "CONTACT_ID"
             ,"COUNTRY"
 
-            from "DEV_EDW"."CUST360"."T_S_CONTACT") as "CON"
+            from "PROD_EDW"."CUST360"."T_S_CONTACT") as "CON"
             
             on "CON"."CONTACT_ID" = "ESend"."CONTACTID"
 //Join in Subject on Interest

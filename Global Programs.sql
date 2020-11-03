@@ -46,8 +46,8 @@ from ( //Creates the main cohort from the t_S_emailsendtable
                 ,c.ORCID_ID1
                 
                 
-        from dev_edw.cust360.t_s_emailsend esend
-        join dev_edw.cust360.t_s_campaign_apr ca on esend.campaignid = ca.eloqua_campaign_id and ca.sub_campaign_type = 'SUB'  
+        from prod_edw.cust360.t_s_emailsend esend
+        join prod_edw.cust360.t_s_campaign ca on esend.campaignid = ca.eloqua_campaign_id and ca.sub_campaign_type = 'SUB'  
                                                                                              and ca.division = 'RC'
                                                                                              and ca.eloqua_campaign_id in ('24013', //Global Program Campaigns (always on campaigns)
                                                                                                                         '24260',
@@ -71,7 +71,7 @@ from ( //Creates the main cohort from the t_S_emailsendtable
                                                                                                                                                         
                             
 
-        join dev_edw.cust360.t_s_contact c on esend.contactid = c.contact_id 
+        join prod_edw.cust360.t_s_contact c on esend.contactid = c.contact_id 
         
         )esend 
 
@@ -82,7 +82,7 @@ left join ( //joining total emails sent by UniqueSendID to main esend cohort.
                  ,count(es.activityid) as EmailsSent
             
              
-           from   dev_edw.cust360.t_s_emailsend es
+           from   prod_edw.cust360.t_s_emailsend es
              
            group by concat( es.campaignid, '.', es.assetid,'.',es.contactid)
              
@@ -95,7 +95,7 @@ left join ( //joining total bouncebacks, soft bouncebacks and hard bouncebacks b
                 ,sum(case when left(bb.SMTPERRORCODE,1) = '5' then 1 else 0 end) HardBounce
                 ,sum(case when left(bb.SMTPERRORCODE,1) = '4' then 1 else 0 end) SoftBounce
              
-             from dev_edw.cust360.t_s_bounceback bb
+             from prod_edw.cust360.t_s_bounceback bb
              
              group by  concat(bb.assetid,'.',bb.contactid)
            )bback on esend.UniqueBounceID = bback.UniqueBounceID
@@ -105,7 +105,7 @@ left join ( //joining total emails opened by UniqueSendID to main esend cohort.
                   concat(eo.campaignid,'.', eo.assetid, '.', eo.contactid) as UniqueSendID
                   ,count(eo.activityid) EmailsOpened
                   
-             from dev_edw.cust360.t_s_emailopen eo
+             from prod_edw.cust360.t_s_emailopen eo
                   
              group by concat(eo.campaignid,'.', eo.assetid, '.', eo.contactid)
                   
@@ -116,7 +116,7 @@ left join ( //joining total emails clicked through by UniqueSendID to main esend
                  concat(ec.campaignid, '.', ec.assetid, '.', ec.contactid) as UniqueSendID
                  ,count(ec.activityid) EmailsClicked
                  
-           from dev_edw.cust360.t_s_emailclickthrough ec
+           from prod_edw.cust360.t_s_emailclickthrough ec
                  
            group by concat(ec.campaignid, '.', ec.assetid, '.', ec.contactid)
                  
@@ -127,7 +127,7 @@ left join ( //joining total unsubscribes through by UniqueSendID to main esend c
                   concat(u.campaignid, '.', u.assetid, '.', u.contactid) as UniqueSendID,
                   count(u.activityid) as Unsubscribed
                    
-             from dev_edw.cust360.t_s_unsubscribe u
+             from prod_edw.cust360.t_s_unsubscribe u
                    
              group by concat(u.campaignid, '.', u.assetid, '.', u.contactid)
               
