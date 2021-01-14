@@ -1,9 +1,3 @@
-//Developer: Callum Young
-//Database: DEV_EDW
-//Schema: CUST360
-//Name: Article Growth - Last 3 Months (hard coded campaign_id)
-//Created: 11/06/2020
-//Last Recorded Run Time: 82.2 Secs
 
 select 
         esend.campaign_name as "Campaign Name"
